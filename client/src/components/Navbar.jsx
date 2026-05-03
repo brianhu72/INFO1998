@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import logo from '../assets/logo.svg';
 
 function Navbar() {
   const location = useLocation();
@@ -10,7 +11,10 @@ function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-inner">
-        <Link to="/" className="navbar-brand">IthacaServes</Link>
+        <Link to="/" className="navbar-brand">
+          <img src={logo} alt="" className="navbar-logo" />
+          IthacaServes
+        </Link>
         <div className="navbar-links">
           <Link to="/opportunities" className={isActive('/opportunities') ? 'active' : ''}>
             Browse

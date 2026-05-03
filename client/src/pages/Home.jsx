@@ -1,8 +1,18 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import OpportunityCard from '../components/OpportunityCard.jsx';
+import logo from '../assets/logo.svg';
 
-const CATEGORIES = ['Food & Hunger', 'Housing', 'Education', 'Healthcare', 'Community', 'Environment', 'Animals', 'Social Services'];
+const QUICK_SEARCHES = [
+  { label: 'Food & Meals', term: 'food' },
+  { label: 'Environment', term: 'environment' },
+  { label: 'Tutoring', term: 'tutor' },
+  { label: 'Seniors', term: 'aging' },
+  { label: 'Arts & Culture', term: 'arts' },
+  { label: 'Health', term: 'health' },
+  { label: 'Housing', term: 'habitat' },
+  { label: 'Disaster Relief', term: 'red cross' },
+];
 
 function Home() {
   const [featured, setFeatured] = useState([]);
@@ -13,7 +23,7 @@ function Home() {
     fetch('http://localhost:3001/api/opportunities')
       .then((res) => res.json())
       .then((data) => {
-        setFeatured(data.slice(0, 3));
+        setFeatured((data.opportunities || []).slice(0, 3));
         setLoading(false);
       })
       .catch(() => {
@@ -38,25 +48,25 @@ function Home() {
         </div>
       </section>
 
-      {/* Categories */}
+      {/* Quick search chips */}
       <section className="section">
         <div className="container">
-          <h2 className="section-title">Browse by Category</h2>
+          <h2 className="section-title">Browse by Interest</h2>
           <div className="category-grid">
-            {CATEGORIES.map((cat) => (
+            {QUICK_SEARCHES.map(({ label, term }) => (
               <Link
-                key={cat}
-                to={`/opportunities?category=${encodeURIComponent(cat)}`}
+                key={term}
+                to={`/opportunities?search=${encodeURIComponent(term)}`}
                 className="category-chip"
               >
-                {cat}
+                {label}
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Featured Opportunities */}
+      {/* Upcoming Opportunities */}
       <section className="section section-alt">
         <div className="container">
           <div className="section-header">
@@ -67,8 +77,8 @@ function Home() {
           {error && <p className="status-msg error">{error}</p>}
           {!loading && !error && (
             <div className="card-grid">
-              {featured.map((opp) => (
-                <OpportunityCard key={opp.id} opportunity={opp} />
+              {featured.map((opp, i) => (
+                <OpportunityCard key={opp.url || i} opportunity={opp} />
               ))}
             </div>
           )}
